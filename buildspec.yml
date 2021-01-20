@@ -13,7 +13,7 @@ phases:
     commands:
       #check the deployment type dev or main, and change the container image to the correct one
       - echo Updating $FILE_NAME Image URL with $IMGURL
-      - sed -i 's/IMG_URL/'"$IMGURL"'/' service.yml
+      - sed -i 's@IMG_URL@'"$IMGURL"'@' service.yml
       #assume role / deploy service to cluster
       - echo Fetching ECR Login...
       - $(aws ecr get-login --no-include-email)
