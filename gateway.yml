@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: federated-gateway-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: federated-gateway
+  template:
+    metadata:
+      labels:
+        app: federated-gateway
+    spec:
+      serviceAccountName: service-a-account
+      containers:
+        - name: federated-gateway
+          image: 889478489411.dkr.ecr.us-east-1.amazonaws.com/federated-gateway:latest
+          imagePullPolicy: 'Always'
+          ports:
+            - containerPort: 4000
+              name: http
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: lb-federated-gateway
+  namespace: default
+spec:
+  selector:
+    app: federated-gateway
+  ports:
+    - protocol: TCP
+      targetPort: 4000
+      port: 80
+      name: http
+  type: LoadBalancer
